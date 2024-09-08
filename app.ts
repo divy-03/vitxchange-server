@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import errorMiddleware from "./middleware/errors";
-import cookieParser from "cookie-parser"; 
-import bodyParser from "body-parser"; 
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
@@ -10,8 +10,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "10mb" }));
 
+// List of allowed origins
+const allowedOrigins = ["http://localhost:5173", "https://vitxchange.vercel.app"];
+
+// Dynamic CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://vitxchange.vercel.app"], // Allow both local and deployed origins
+  origin: (origin: string | undefined, callback: Function) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the request
+    } else {
+      callback(new Error("Not allowed by CORS")); // Deny the request
+    }
+  },
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: "Content-Type, Authorization",
