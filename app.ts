@@ -1,43 +1,29 @@
 import express, { NextFunction, Request, Response } from "express";
 import errorMiddleware from "./middleware/errors";
-const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import cookieParser from "cookie-parser"; 
+import bodyParser from "body-parser"; 
+import cors from "cors";
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "10mb" }));
-// app.use(bodyParser.urleconded({ limit: "10mb", extended: true }));
 
 const corsOptions = {
-  // origin: "http://localhost:5173", // Correct origin
-  origin: "https://vitxchange.vercel.app/",
+  origin: ["http://localhost:5173", "https://vitxchange.vercel.app"], // Allow both local and deployed origins
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: "Content-Type, Authorization",
 };
 
-app.use(cookieParser());
-
-// Apply CORS middleware
+// Apply CORS middleware with options
 app.use(cors(corsOptions));
 
-// Handle preflight requests
-app.options("*", cors(corsOptions));
+// Middleware for parsing cookies
+app.use(cookieParser());
 
-// Custom middleware to ensure CORS headers are set
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.setHeader("Access-Control-Allow-Origin", "https://vitxchange.vercel.app/");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
-
-app.use(express.json());
-
+// Routes
 const user = require("./routes/userRoute");
 app.use("/api/v1", user);
 
@@ -50,12 +36,15 @@ app.use("/api/v1", cart);
 const order = require("./routes/orderRoute");
 app.use("/api/v1", order);
 
+// Error middleware
 app.use(errorMiddleware);
 
+// Health check route
 app.get("/", (req: Request, res: Response) => {
   res.json("Server Working");
 });
 
+// 404 handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Route not found" });
 });
