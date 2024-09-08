@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import errorMiddleware from "./middleware/errors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -6,12 +6,11 @@ import cors from "cors";
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: "10mb" }));
-
 // List of allowed origins
-const allowedOrigins = ["http://localhost:5173", "https://vitxchange.vercel.app"];
+const allowedOrigins = [
+  "https://vitxchange.vercel.app",
+  "http://localhost:5173",
+];
 
 // Dynamic CORS configuration
 const corsOptions = {
@@ -29,6 +28,11 @@ const corsOptions = {
 
 // Apply CORS middleware with options
 app.use(cors(corsOptions));
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "10mb" }));
 
 // Middleware for parsing cookies
 app.use(cookieParser());
