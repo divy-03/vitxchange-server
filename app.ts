@@ -11,7 +11,8 @@ app.use(bodyParser.json({ limit: "10mb" }));
 // app.use(bodyParser.urleconded({ limit: "10mb", extended: true }));
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Correct origin
+  // origin: "http://localhost:5173", // Correct origin
+  origin: "https://vitxchange.vercel.app/",
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: "Content-Type, Authorization",
@@ -27,7 +28,8 @@ app.options("*", cors(corsOptions));
 
 // Custom middleware to ensure CORS headers are set
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Origin", "https://vitxchange.vercel.app/");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
