@@ -15,7 +15,7 @@ import sendEmail from "../utils/sendEmail";
 import { check, validationResult } from "express-validator";
 import resError from "../tools/resError";
 import resSuccess from "../tools/resSuccess";
-import crypto, { publicDecrypt } from "crypto";
+import crypto  from "crypto";
 import { v2 } from "cloudinary";
 const catchAsyncError = require("../middleware/catchAsyncError");
 
@@ -347,7 +347,7 @@ export const deleteUser = catchAsyncError(
       return resError(404, "User not found", res);
     }
 
-    if (user.role == "owner") {
+    if (user.role === "owner") {
       return resError(400, "You can't delete Owner", res);
     }
 

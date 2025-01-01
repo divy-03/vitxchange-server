@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Types } from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 import validator from "validator";
 import crypto from "crypto";
 
